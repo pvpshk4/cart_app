@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../blocs/catalog_bloc.dart';
-
+import '../blocs/cart_bloc.dart';
 import '../widgets/product_tile.dart';
+import 'cart_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   const CatalogScreen({super.key});
@@ -13,14 +14,6 @@ class CatalogScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Catalog"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.pushNamed(context, "/cart");
-            },
-          ),
-        ],
       ),
       body: BlocBuilder<CatalogBloc, CatalogState>(
         builder: (context, state) {
@@ -46,6 +39,40 @@ class CatalogScreen extends StatelessWidget {
             );
           }
           return Container();
+        },
+      ),
+      floatingActionButton: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoaded && state.cart.isNotEmpty) {
+            return FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartScreen()),
+                );
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.black,
+              ),
+            )
+                .animate()
+                .fadeIn(duration: 400.ms)
+                .scaleXY(begin: 0.5, end: 1.0, curve: Curves.easeOut);
+          } else {
+            return FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {},
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.black,
+              ),
+            )
+                .animate()
+                .fadeOut(duration: 300.ms)
+                .scaleXY(begin: 1.0, end: 0.5, curve: Curves.easeIn);
+          }
         },
       ),
     );
