@@ -6,18 +6,43 @@ class ProductRepository {
       Product(
           id: 1,
           name: "Чипсы",
-          imageUrl: "https://imgur.com/FDmT2qo.png",
+          imageUrl: "https://placehold.co/100x150.png",
           price: 100.0),
       Product(
           id: 2,
-          name: "Чипсы",
-          imageUrl: "https://imgur.com/FDmT2qo.png",
+          name: "Яблоки",
+          imageUrl: "https://placehold.co/100x150.png",
           price: 120.0),
       Product(
           id: 3,
-          name: "Чипсы",
-          imageUrl: "https://imgur.com/FDmT2qo.png",
+          name: "Бананы",
+          imageUrl: "https://placehold.co/100x150.png",
           price: 80.0),
+      Product(
+          id: 4,
+          name: "Молоко",
+          imageUrl: "https://placehold.co/100x150.png",
+          price: 60.0),
+      Product(
+          id: 5,
+          name: "Чипсы",
+          imageUrl: "https://placehold.co/100x150.png",
+          price: 500.0),
+      Product(
+          id: 6,
+          name: "Чипсы",
+          imageUrl: "https://placehold.co/100x150.png",
+          price: 60.0),
+      Product(
+          id: 7,
+          name: "Чипсы",
+          imageUrl: "https://placehold.co/100x150.png",
+          price: 60.0),
+      Product(
+          id: 8,
+          name: "Чипсы",
+          imageUrl: "https://placehold.co/100x150.png",
+          price: 60.0),
     ];
   }
 }

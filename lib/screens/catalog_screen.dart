@@ -12,7 +12,7 @@ class CatalogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Каталог"),
+        title: Text("Catalog"),
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
@@ -31,8 +31,8 @@ class CatalogScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // Два столбца в сетке
-                  childAspectRatio: 0.5, // Соотношение сторон карточки
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.5,
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                 ),

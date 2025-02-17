@@ -1,6 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/cart_item.dart';
 import '../models/product.dart';
+
+abstract class CartState {}
+
+class CartInitial extends CartState {}
+
+class CartLoaded extends CartState {
+  final Map<Product, int> cart;
+  CartLoaded(this.cart);
+}
 
 abstract class CartEvent {}
 
@@ -14,36 +22,54 @@ class RemoveFromCart extends CartEvent {
   RemoveFromCart(this.product);
 }
 
-abstract class CartState {}
-
-class CartUpdated extends CartState {
-  final List<CartItem> items;
-  CartUpdated(this.items);
+class DeleteFromCart extends CartEvent {
+  final Product product;
+  DeleteFromCart(this.product);
 }
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartUpdated([])) {
-    on<AddToCart>((event, emit) {
-      final currentState = state as CartUpdated;
-      final updatedCart = List<CartItem>.from(currentState.items);
+  final Map<Product, int> _cart = {};
 
-      final existingItem =
-          updatedCart.indexWhere((item) => item.product.id == event.product.id);
-      if (existingItem != -1) {
-        updatedCart[existingItem].quantity++;
-      } else {
-        updatedCart.add(CartItem(product: event.product));
-      }
+  CartBloc() : super(CartLoaded({})) {
+    on<AddToCart>(
+      (event, emit) {
+        _cart.update(event.product, (quantity) => quantity + 1,
+            ifAbsent: () => 1);
+        emit(
+          CartLoaded(
+            Map.from(_cart),
+          ),
+        );
+      },
+    );
 
-      emit(CartUpdated(updatedCart));
-    });
+    on<RemoveFromCart>(
+      (event, emit) {
+        if (_cart.containsKey(event.product)) {
+          int quantity = _cart[event.product]!;
+          if (quantity > 1) {
+            _cart[event.product] = quantity - 1;
+          } else {
+            _cart.remove(event.product);
+          }
+        }
+        emit(
+          CartLoaded(
+            Map.from(_cart),
+          ),
+        );
+      },
+    );
 
-    on<RemoveFromCart>((event, emit) {
-      final currentState = state as CartUpdated;
-      final updatedCart = List<CartItem>.from(currentState.items)
-        ..removeWhere((item) => item.product.id == event.product.id);
-
-      emit(CartUpdated(updatedCart));
-    });
+    on<DeleteFromCart>(
+      (event, emit) {
+        _cart.remove(event.product);
+        emit(
+          CartLoaded(
+            Map.from(_cart),
+          ),
+        );
+      },
+    );
   }
 }

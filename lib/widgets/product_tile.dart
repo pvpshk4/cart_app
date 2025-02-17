@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/product.dart';
 import '../blocs/cart_bloc.dart';
@@ -14,7 +15,7 @@ class ProductTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      elevation: 4,
+      elevation: 1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -28,7 +29,7 @@ class ProductTile extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(6.5),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -38,17 +39,40 @@ class ProductTile extends StatelessWidget {
                 ),
                 Text("${product.price} ₽",
                     style: TextStyle(fontSize: 14, color: Colors.green)),
-                IconButton(
-                  color: Colors.black,
-                  icon: Icon(Icons.add_shopping_cart),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.read<CartBloc>().add(AddToCart(product));
+                BlocBuilder<CartBloc, CartState>(
+                  builder: (context, state) {
+                    int quantity = 0;
+                    if (state is CartLoaded) {
+                      quantity = state.cart[product] ?? 0;
+                    }
+                    final isCounter = quantity > 0;
+
+                    return SizedBox(
+                      height: 40,
+                      child: AnimatedSwitcher(
+                        duration: 300.ms,
+                        transitionBuilder: (child, animation) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: Offset(0, 0),
+                              end: Offset(0, 0),
+                            ).animate(animation),
+                            child: FadeTransition(
+                                opacity: animation, child: child),
+                          );
+                        },
+                        child: isCounter
+                            ? _CounterWidget(
+                                key: const ValueKey('counter'),
+                                product: product,
+                                quantity: quantity,
+                              )
+                            : _AddButton(
+                                key: const ValueKey('add_button'),
+                                product: product,
+                              ),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -57,5 +81,87 @@ class ProductTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _AddButton extends StatelessWidget {
+  final Product product;
+  const _AddButton({super.key, required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+            padding: EdgeInsets.all(0.0),
+            icon: Icon(Icons.add_shopping_cart, size: 18, color: Colors.black),
+            onPressed: () => context.read<CartBloc>().add(AddToCart(product)),
+          ),
+        )
+            .animate()
+            .fadeIn(duration: 200.ms)
+            .scaleXY(begin: 0.5, end: 1, curve: Curves.easeOutBack));
+  }
+}
+
+class _CounterWidget extends StatelessWidget {
+  final Product product;
+  final int quantity;
+  const _CounterWidget(
+      {super.key, required this.product, required this.quantity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.centerLeft, // Выравнивание слева
+        child: SizedBox(
+          height: 36, // Фиксированная высота
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.delete, color: Colors.red, size: 20),
+                onPressed: () =>
+                    context.read<CartBloc>().add(DeleteFromCart(product)),
+              ),
+              Container(
+                height: 36,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.all(0.0),
+                      icon: Icon(Icons.remove, color: Colors.red, size: 20),
+                      onPressed: () =>
+                          context.read<CartBloc>().add(RemoveFromCart(product)),
+                    ),
+                    Text('$quantity',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    IconButton(
+                      padding: EdgeInsets.all(0.0),
+                      icon: Icon(Icons.add, color: Colors.red, size: 20),
+                      onPressed: () =>
+                          context.read<CartBloc>().add(AddToCart(product)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+            .animate(key: key)
+            .fadeIn(duration: 200.ms)
+            .scaleXY(begin: 0.8, end: 1, curve: Curves.easeOutBack));
   }
 }
