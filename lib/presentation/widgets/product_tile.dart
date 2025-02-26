@@ -1,3 +1,4 @@
+import 'package:cart_app/models/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,12 @@ class ProductTile extends StatelessWidget {
                 ),
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
-                    final quantity = state.cart?[product] ?? 0;
+                    final cart = state.cart ?? [];
+                    final cartItem = cart.firstWhere(
+                      (item) => item.product.id == product.id,
+                      orElse: () => CartItem(product: product, quantity: 0),
+                    );
+                    final quantity = cartItem.quantity;
                     final isCounter = quantity > 0;
 
                     return SizedBox(

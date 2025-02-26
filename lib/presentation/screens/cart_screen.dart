@@ -13,8 +13,8 @@ class CartScreen extends StatelessWidget {
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoaded) {
-            final cart = state.cart;
-            if (cart == null || cart.isEmpty) {
+            final cart = state.cart ?? [];
+            if (cart.isEmpty) {
               return const Center(
                 child: Text(
                   "Your cart is empty",
@@ -23,12 +23,11 @@ class CartScreen extends StatelessWidget {
               );
             }
 
-            final cartItems = cart.entries.toList();
             return ListView.builder(
-              itemCount: cartItems.length,
+              itemCount: cart.length,
               itemBuilder: (context, index) {
-                final product = cartItems[index].key;
-                final quantity = cartItems[index].value;
+                final product = cart[index].product;
+                final quantity = cart[index].quantity;
 
                 return Card(
                   margin:
