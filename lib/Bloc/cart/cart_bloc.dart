@@ -1,4 +1,4 @@
-import 'package:cart_app/models/cart_item.dart';
+import 'package:cart_app/data/models/cart_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cart_exports.dart';
