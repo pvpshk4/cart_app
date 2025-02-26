@@ -21,7 +21,8 @@ class ProductTile extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.network(
                 product.imageUrl,
                 fit: BoxFit.cover,
@@ -35,16 +36,16 @@ class ProductTile extends StatelessWidget {
               children: [
                 Text(
                   product.name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                Text("${product.price} ₽",
-                    style: TextStyle(fontSize: 14, color: Colors.green)),
+                Text(
+                  "${product.price} ₽",
+                  style: const TextStyle(fontSize: 14, color: Colors.green),
+                ),
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
-                    int quantity = 0;
-                    if (state is CartLoaded) {
-                      quantity = state.cart[product] ?? 0;
-                    }
+                    final quantity = state.cart?[product] ?? 0;
                     final isCounter = quantity > 0;
 
                     return SizedBox(
@@ -54,11 +55,13 @@ class ProductTile extends StatelessWidget {
                         transitionBuilder: (child, animation) {
                           return SlideTransition(
                             position: Tween<Offset>(
-                              begin: Offset(0, 0),
-                              end: Offset(0, 0),
+                              begin: const Offset(0, 0),
+                              end: const Offset(0, 0),
                             ).animate(animation),
                             child: FadeTransition(
-                                opacity: animation, child: child),
+                              opacity: animation,
+                              child: child,
+                            ),
                           );
                         },
                         child: isCounter
@@ -91,77 +94,87 @@ class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: IconButton(
-            padding: EdgeInsets.all(0.0),
-            icon: Icon(Icons.add_shopping_cart, size: 18, color: Colors.black),
-            onPressed: () => context.read<CartBloc>().add(AddToCart(product)),
-          ),
-        )
-            .animate()
-            .fadeIn(duration: 200.ms)
-            .scaleXY(begin: 0.5, end: 1, curve: Curves.easeOutBack));
+      alignment: Alignment.centerLeft,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(Icons.add_shopping_cart,
+              size: 18, color: Colors.black),
+          onPressed: () => context.read<CartBloc>().add(AddToCart(product)),
+        ),
+      )
+          .animate()
+          .fadeIn(duration: 200.ms)
+          .scaleXY(begin: 0.5, end: 1, curve: Curves.easeOutBack),
+    );
   }
 }
 
 class _CounterWidget extends StatelessWidget {
   final Product product;
   final int quantity;
-  const _CounterWidget(
-      {super.key, required this.product, required this.quantity});
+  const _CounterWidget({
+    super.key,
+    required this.product,
+    required this.quantity,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment.centerLeft, // Выравнивание слева
-        child: SizedBox(
-          height: 36, // Фиксированная высота
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(Icons.delete, color: Colors.red, size: 20),
-                onPressed: () =>
-                    context.read<CartBloc>().add(DeleteFromCart(product)),
+      alignment: Alignment.centerLeft,
+      child: SizedBox(
+        height: 36,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+              onPressed: () =>
+                  context.read<CartBloc>().add(DeleteFromCart(product)),
+            ),
+            Container(
+              height: 36,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
               ),
-              Container(
-                height: 36,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.all(0.0),
-                      icon: Icon(Icons.remove, color: Colors.red, size: 20),
-                      onPressed: () =>
-                          context.read<CartBloc>().add(RemoveFromCart(product)),
+              child: Row(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.remove, color: Colors.red, size: 20),
+                    onPressed: () =>
+                        context.read<CartBloc>().add(RemoveFromCart(product)),
+                  ),
+                  Text(
+                    '$quantity',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text('$quantity',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    IconButton(
-                      padding: EdgeInsets.all(0.0),
-                      icon: Icon(Icons.add, color: Colors.red, size: 20),
-                      onPressed: () =>
-                          context.read<CartBloc>().add(AddToCart(product)),
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.add, color: Colors.red, size: 20),
+                    onPressed: () =>
+                        context.read<CartBloc>().add(AddToCart(product)),
+                  ),
+                ],
               ),
-            ],
-          ),
-        )
-            .animate(key: key)
-            .fadeIn(duration: 200.ms)
-            .scaleXY(begin: 0.8, end: 1, curve: Curves.easeOutBack));
+            ),
+          ],
+        ),
+      )
+          .animate(key: key)
+          .fadeIn(duration: 200.ms)
+          .scaleXY(begin: 0.8, end: 1, curve: Curves.easeOutBack),
+    );
   }
 }

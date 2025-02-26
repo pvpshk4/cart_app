@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../Bloc/cart/cart_exports.dart';
 import '../../models/product.dart';
 
@@ -10,18 +9,21 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Cart")),
+      appBar: AppBar(title: const Text("Cart")),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoaded) {
-            final cartItems = state.cart.entries.toList();
-            if (cartItems.isEmpty) {
-              return Center(
-                child:
-                    Text("Your cart is empty", style: TextStyle(fontSize: 18)),
+            final cart = state.cart;
+            if (cart == null || cart.isEmpty) {
+              return const Center(
+                child: Text(
+                  "Your cart is empty",
+                  style: TextStyle(fontSize: 18),
+                ),
               );
             }
 
+            final cartItems = cart.entries.toList();
             return ListView.builder(
               itemCount: cartItems.length,
               itemBuilder: (context, index) {
@@ -29,7 +31,8 @@ class CartScreen extends StatelessWidget {
                 final quantity = cartItems[index].value;
 
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
                   elevation: 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -38,20 +41,28 @@ class CartScreen extends StatelessWidget {
                     minTileHeight: 75.0,
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(product.imageUrl,
-                          width: 50, height: 60, fit: BoxFit.cover),
+                      child: Image.network(
+                        product.imageUrl,
+                        width: 50,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    title: Text(product.name,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text("${product.price} ₽",
-                        style: TextStyle(color: Colors.green)),
+                    title: Text(
+                      product.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "${product.price} ₽",
+                      style: const TextStyle(color: Colors.green),
+                    ),
                     trailing: _buildCounter(context, product, quantity),
                   ),
                 );
               },
             );
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -62,8 +73,8 @@ class CartScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-          padding: EdgeInsets.all(0.0),
-          icon: Icon(
+          padding: EdgeInsets.zero,
+          icon: const Icon(
             Icons.delete,
             color: Colors.red,
             size: 20.0,
@@ -82,8 +93,8 @@ class CartScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                padding: EdgeInsets.all(0.0),
-                icon: Icon(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
                   Icons.remove,
                   color: Colors.red,
                   size: 20.0,
@@ -94,11 +105,14 @@ class CartScreen extends StatelessWidget {
               ),
               Text(
                 "$quantity",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               IconButton(
-                padding: EdgeInsets.all(0.0),
-                icon: Icon(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
                   Icons.add,
                   color: Colors.red,
                   size: 20.0,

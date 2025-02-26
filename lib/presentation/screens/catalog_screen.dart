@@ -13,17 +13,17 @@ class CatalogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Catalog"),
+        title: const Text("Catalog"),
       ),
       body: BlocBuilder<CatalogBloc, CatalogState>(
         builder: (context, state) {
           if (state is CatalogLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is CatalogLoaded) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 0.5,
                   crossAxisSpacing: 0,
@@ -32,7 +32,6 @@ class CatalogScreen extends StatelessWidget {
                 itemCount: state.products.length,
                 itemBuilder: (context, index) {
                   final product = state.products[index];
-
                   return ProductTile(product: product);
                 },
               ),
@@ -43,16 +42,18 @@ class CatalogScreen extends StatelessWidget {
       ),
       floatingActionButton: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          if (state is CartLoaded && state.cart.isNotEmpty) {
+          if (state is CartLoaded &&
+              state.cart != null &&
+              state.cart!.isNotEmpty) {
             return FloatingActionButton(
               backgroundColor: Colors.red,
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CartScreen()),
+                  MaterialPageRoute(builder: (context) => const CartScreen()),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.shopping_cart,
                 color: Colors.black,
               ),
@@ -64,7 +65,7 @@ class CatalogScreen extends StatelessWidget {
             return FloatingActionButton(
               backgroundColor: Colors.red,
               onPressed: () {},
-              child: Icon(
+              child: const Icon(
                 Icons.shopping_cart,
                 color: Colors.black,
               ),
