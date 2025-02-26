@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'blocs/catalog_bloc.dart';
-import 'blocs/cart_bloc.dart';
-import 'repository/product_repository.dart';
-import 'screens/catalog_screen.dart';
-import 'screens/cart_screen.dart';
+
+import 'Bloc/cart/cart_bloc.dart';
+import 'Bloc/catalog/catalog_exports.dart';
+import 'data/datasources/product_data.dart';
+import 'presentation/screens/catalog_screen.dart';
+import 'presentation/screens/cart_screen.dart';
 
 void main() {
   final productRepository = ProductRepository();

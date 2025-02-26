@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/product.dart';
-import '../blocs/cart_bloc.dart';
+import '../../Bloc/cart/cart_exports.dart';
+import '../../models/product.dart';
 
 class ProductTile extends StatelessWidget {
   final Product product;

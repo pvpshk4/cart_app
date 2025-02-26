@@ -1,4 +1,4 @@
-import '../models/product.dart';
+import '../../models/product.dart';
 
 class ProductRepository {
   List<Product> getProducts() {
