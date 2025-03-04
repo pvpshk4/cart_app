@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Bloc/cart/cart_exports.dart';
-import '../../Bloc/catalog/catalog_exports.dart';
+import '../Bloc/cart/cart_exports.dart';
+import '../Bloc/catalog/catalog_exports.dart';
 import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 
